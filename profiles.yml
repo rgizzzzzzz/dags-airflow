@@ -1,0 +1,14 @@
+dbt_tutorial:
+  outputs:
+
+    dev:
+      type: postgres
+      threads: 1
+      host: 172.27.0.101
+      port: 5433
+      user: postgres
+      pass: postgres
+      dbname: Adventureworks
+      schema: teste
+
+  target: dev
