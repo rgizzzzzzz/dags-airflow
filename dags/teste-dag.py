@@ -4,7 +4,7 @@ from cosmos.operators import DbtDocsOperator
 from include.profiles import airflow_db
 
 # Caminho para o seu projeto DBT
-dbt_project_path = "/opt/airflow/dags"
+dbt_project_path = "/opt/airflow/dags/dbt_tutorial"
 
 # Usando a configuração de perfil importada
 profile_config = airflow_db  
@@ -25,5 +25,5 @@ with DbtDag(
         task_id="generate_dbt_docs",
         project_dir=dbt_project_path,
         profile_config=profile_config,
-        target_dir="/opt/airflow/dags/target",
+        target_dir="/opt/airflow/dags/dbt_tutorial/target",
     )
