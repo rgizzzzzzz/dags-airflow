@@ -10,7 +10,7 @@ dbt_project_path = "/opt/airflow/dags/dbt_tutorial"
 profile_config = airflow_db  
 
 # Criando a DAG
-with DbtDag(
+simple_dag DbtDag(
     project_config=ProjectConfig(dbt_project_path),
     profile_config=profile_config,
     schedule_interval="@daily",
@@ -18,4 +18,4 @@ with DbtDag(
     catchup=False,
     dag_id="teste_dag",
     tags=["simple"],
-) as simple_dag:
+)
