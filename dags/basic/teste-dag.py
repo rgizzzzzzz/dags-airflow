@@ -1,6 +1,7 @@
 from datetime import datetime
 from cosmos import DbtDag, ProjectConfig
 from cosmos.operators import DbtDocsOperator
+from include.constants import global_execution_config  # Alterado para o novo config
 from include.profiles import airflow_db
 
 # Caminho para o seu projeto DBT
@@ -13,6 +14,7 @@ profile_config = airflow_db
 with DbtDag(
     project_config=ProjectConfig(dbt_project_path),
     profile_config=profile_config,
+    execution_config=global_execution_config,  # Alterado para o novo config #alterando para binário dbt global
     schedule_interval="@daily",
     start_date=datetime(2023, 1, 1),
     catchup=False,

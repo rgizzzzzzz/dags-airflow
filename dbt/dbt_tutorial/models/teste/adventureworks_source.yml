@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: sales
+    database: Adventureworks
+    tables:
+      - name: salesorderdetail
+        description: "Detalhes das vendas de cada pedido"
+
+  - name: production
+    database: Adventureworks
+    tables:
+      - name: product
+        description: "Lista de produtos"
+      - name: productcategory
+        description: "Categorias dos produtos"

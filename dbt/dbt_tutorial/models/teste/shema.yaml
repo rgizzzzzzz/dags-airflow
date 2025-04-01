@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: stg_product
+    description: "Modelo de produtos"
+    columns:
+      - name: productid
+        description: "ID do produto"
+        tests:
+          - unique
+          - not_null
+  - name: stg_sales_order_detail
+    description: "Modelo de TESTE"
+    columns:
+      - name: salesorderid
+        description: "TESTE"
+        tests:
+          - not_null
