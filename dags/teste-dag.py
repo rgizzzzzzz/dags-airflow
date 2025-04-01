@@ -19,11 +19,3 @@ with DbtDag(
     dag_id="teste_dag",
     tags=["simple"],
 ) as simple_dag:
-
-    # Tarefa para gerar a documentação dbt
-    generate_docs = DbtDocsOperator(
-        task_id="generate_dbt_docs",
-        project_dir=dbt_project_path,
-        profile_config=profile_config,
-        target_dir="/opt/airflow/dags/dbt_tutorial/target",
-    )
