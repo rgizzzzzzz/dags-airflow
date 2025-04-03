@@ -1,3 +1,0 @@
-[submodule "dags/segunda_dag"]
-	path = dags/segunda_dag
-	url = git@github.com:rgizzzzzzz/teste-rafa.git
