@@ -30,5 +30,6 @@ with DbtDag(
         profile_config=airflow_db,
 )
 
-simple_dag.dbt_task_group >> generate_docs
+simple_dag.task_group >> generate_docs
+
 
