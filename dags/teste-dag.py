@@ -28,7 +28,6 @@ with DbtDag(
         task_id="generate_dbt_docs",
         project_dir=dbt_project_path,
         profile_config=airflow_db,
-        target_dir="/opt/airflow/dags/dbt_tutorial/target2",
 )
 
 simple_dag.dbt_task_group >> generate_docs
