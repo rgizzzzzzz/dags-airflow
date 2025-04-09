@@ -32,5 +32,8 @@ with DbtDag(
         profile_config=airflow_db,
     )
 
-    # Conecta após o dbt run (não gera ciclo!)
-    dag.dbt_run >> generate_docs
+    # Pega todas as tasks dentro do task_group
+    dbt_tasks = list(dag.task_group.get_tasks())
+
+    # Conecta a última task do grupo ao generate_docs
+    dbt_tasks[-1] >> generate_docs
