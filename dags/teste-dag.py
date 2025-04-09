@@ -1,12 +1,11 @@
 from datetime import datetime
 from cosmos import DbtDag, ProjectConfig, ProfileConfig
-from cosmos.operators import DbtDocsOperator
 from cosmos.profiles import PostgresUserPasswordProfileMapping
 
-# Caminho do projeto DBT
+# Caminho para o seu projeto DBT
 dbt_project_path = "/opt/airflow/dags/dbt_tutorial"
 
-# Configuração do profile
+# Definindo a configuração do perfil antes de usá-la
 airflow_db = ProfileConfig(
     profile_name="airflow_db",
     target_name="dev",
@@ -16,21 +15,13 @@ airflow_db = ProfileConfig(
     ),
 )
 
-with DbtDag(
-    dag_id="dbt_com_docs_dag",
+# Criando a DAG (dag_id deve ser o primeiro argumento)
+simple_dag = DbtDag(
+    dag_id="teste_dag",  # dag_id sempre deve vir primeiro
     project_config=ProjectConfig(dbt_project_path),
     profile_config=airflow_db,
     schedule_interval="@daily",
     start_date=datetime(2023, 1, 1),
     catchup=False,
-    tags=["dbt", "docs"],
-) as dag:
-
-    generate_docs = DbtDocsOperator(
-        task_id="generate_dbt_docs",
-        project_dir=dbt_project_path,
-        profile_config=airflow_db,
-    )
-
-
-
+    tags=["simple"],
+)
