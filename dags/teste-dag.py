@@ -3,10 +3,10 @@ from cosmos import DbtDag, ProjectConfig, ProfileConfig
 from cosmos.operators import DbtDocsOperator
 from cosmos.profiles import PostgresUserPasswordProfileMapping
 
-# Caminho para o seu projeto DBT
+# Caminho do projeto DBT
 dbt_project_path = "/opt/airflow/dags/dbt_tutorial"
 
-# Configuração do profile DBT
+# Configuração do profile
 airflow_db = ProfileConfig(
     profile_name="airflow_db",
     target_name="dev",
@@ -16,9 +16,7 @@ airflow_db = ProfileConfig(
     ),
 )
 
-# Criando a DAG com context manager para permitir adição de tasks extras
-from airflow import DAG
-
+# Criação da DAG com Cosmos
 with DbtDag(
     dag_id="dbt_com_docs_dag",
     project_config=ProjectConfig(dbt_project_path),
@@ -29,12 +27,11 @@ with DbtDag(
     tags=["dbt", "docs"],
 ) as dag:
 
-    # Cria a task de gerar a documentação
     generate_docs = DbtDocsOperator(
         task_id="generate_dbt_docs",
         project_dir=dbt_project_path,
         profile_config=airflow_db,
     )
 
-    # Conecta a task docs para rodar depois do último grupo de tarefas dbt
-    dag.dbt_task_group >> generate_docs
+    # Aqui usamos o task_group gerado automaticamente
+    dag.task_group >> generate_docs
