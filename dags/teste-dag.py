@@ -1,8 +1,7 @@
 from datetime import datetime
 from airflow import DAG
 from airflow.models.baseoperator import chain
-from cosmos import ProjectConfig, ProfileConfig
-from cosmos.task_group import DbtTaskGroup
+from cosmos import ProjectConfig, ProfileConfig, DbtTaskGroup
 from cosmos.operators import DbtDocsOperator
 from cosmos.profiles import PostgresUserPasswordProfileMapping
 
@@ -40,8 +39,4 @@ with DAG(
         task_id="generate_dbt_docs",
         project_dir=dbt_project_path,
         profile_config=airflow_db,
-        target_dir="/usr/local/airflow/dbt/dbt_tutorial/target",
-    )
-
-    # Define a ordem de execução: após o grupo de tarefas do DBT, gera a documentação
-    chain(dbt_tasks, generate_docs)
+        target_dir="/usr/local/airflow/dbt_
