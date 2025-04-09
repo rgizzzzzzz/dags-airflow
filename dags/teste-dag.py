@@ -2,7 +2,6 @@ from datetime import datetime
 from cosmos import DbtDag, ProjectConfig, ProfileConfig
 from cosmos.operators import DbtDocsOperator
 from cosmos.profiles import PostgresUserPasswordProfileMapping
-from airflow.models.baseoperator import chain
 
 # Caminho do projeto DBT
 dbt_project_path = "/opt/airflow/dags/dbt_tutorial"
@@ -33,5 +32,5 @@ with DbtDag(
         profile_config=airflow_db,
     )
 
-    # Correto: conecta o task_group principal com o generate_docs
-    chain(dag.task_group, generate_docs)
+    # Conecta após o dbt run (não gera ciclo!)
+    dag.dbt_run >> generate_docs
