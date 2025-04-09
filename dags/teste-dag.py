@@ -39,6 +39,7 @@ with DAG(
         task_id="generate_dbt_docs",
         project_dir=dbt_project_path,
         profile_config=airflow_db,
+        copy_to="/opt/airflow"
     )
 
     # Define a ordem de execução: após o grupo de tarefas do DBT, gera a documentação
