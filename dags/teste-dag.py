@@ -1,11 +1,15 @@
 from datetime import datetime
-from cosmos import DbtDag, ProjectConfig, ProfileConfig
+from airflow import DAG
+from airflow.models.baseoperator import chain
+from cosmos import ProjectConfig, ProfileConfig
+from cosmos.task_group import DbtTaskGroup
+from cosmos.operators import DbtDocsOperator
 from cosmos.profiles import PostgresUserPasswordProfileMapping
 
 # Caminho para o seu projeto DBT
 dbt_project_path = "/opt/airflow/dags/dbt_tutorial"
 
-# Definindo a configuração do perfil antes de usá-la
+# Configuração do perfil DBT
 airflow_db = ProfileConfig(
     profile_name="airflow_db",
     target_name="dev",
@@ -15,13 +19,29 @@ airflow_db = ProfileConfig(
     ),
 )
 
-# Criando a DAG (dag_id deve ser o primeiro argumento)
-simple_dag = DbtDag(
-    dag_id="teste_dag",  # dag_id sempre deve vir primeiro
-    project_config=ProjectConfig(dbt_project_path),
-    profile_config=airflow_db,
+# DAG padrão do Airflow
+with DAG(
+    dag_id="teste_dag_com_taskgroup_e_docs",
     schedule_interval="@daily",
     start_date=datetime(2023, 1, 1),
     catchup=False,
-    tags=["simple"],
-)
+    tags=["dbt", "docs"],
+) as dag:
+
+    # Task group do Cosmos (executa run, test, seed, etc. automaticamente)
+    dbt_tasks = DbtTaskGroup(
+        group_id="dbt_task_group",
+        project_config=ProjectConfig(dbt_project_path),
+        profile_config=airflow_db,
+    )
+
+    # Task para gerar a documentação
+    generate_docs = DbtDocsOperator(
+        task_id="generate_dbt_docs",
+        project_dir=dbt_project_path,
+        profile_config=airflow_db,
+        target_dir="/usr/local/airflow/dbt/dbt_tutorial/target",
+    )
+
+    # Define a ordem de execução: após o grupo de tarefas do DBT, gera a documentação
+    chain(dbt_tasks, generate_docs)
