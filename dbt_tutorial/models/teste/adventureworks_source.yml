@@ -5,12 +5,12 @@ sources:
     database: Adventureworks
     tables:
       - name: salesorderdetail
-        description: "Detalhes das vendas de cada pedido"
+        description: "teste"
 
   - name: production
     database: Adventureworks
     tables:
       - name: product
-        description: "Lista de produtos"
+        description: "teste"
       - name: productcategory
-        description: "Categorias dos produtos"
+        description: "teste"
