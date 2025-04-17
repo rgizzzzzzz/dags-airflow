@@ -22,7 +22,7 @@ airflow_db = ProfileConfig(
 # Função para copiar os arquivos gerados para o diretório de docs
 def copy_docs_to_local(project_dir: str, context: dict = None):
     target_dir = os.path.join(project_dir, "target")
-    
+
     # Verificar se a pasta de saída do DBT existe
     if os.path.exists(target_dir):
         # Copiar os arquivos necessários para o diretório /opt/docs
@@ -51,5 +51,8 @@ with DbtDag(
         task_id="generate_dbt_docs",
         project_dir=dbt_project_path,
         profile_config=airflow_db,
-        callback=lambda project_dir, **kwargs: copy_docs_to_local(project_dir, context=kwargs),  # Alterado para usar **kwargs
+        callback=lambda project_dir, **kwargs: copy_docs_to_local(project_dir, context=kwargs),
     )
+
+    # Garantir que a geração de docs só ocorra após todas as outras tarefas do DBT
+    simple_dag.final_task >> generate_dbt_docs
