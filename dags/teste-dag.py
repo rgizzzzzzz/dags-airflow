@@ -1,9 +1,9 @@
-import os
-import shutil
 from datetime import datetime
 from cosmos import DbtDag, ProjectConfig, ProfileConfig
 from cosmos.profiles import PostgresUserPasswordProfileMapping
 from cosmos.operators import DbtDocsOperator
+import shutil
+import os
 
 # Caminho para o seu projeto DBT
 dbt_project_path = "/opt/airflow/dags/dbt_tutorial"
@@ -35,8 +35,8 @@ def copy_docs_to_local(project_dir: str):
     else:
         print(f"A pasta de saída do DBT não foi encontrada: {target_dir}")
 
-# Criando a DAG (dag_id deve ser o primeiro argumento)
-simple_dag = DbtDag(
+# Criando a DAG com o DBT
+with DbtDag(
     dag_id="teste_dag",  # dag_id sempre deve vir primeiro
     project_config=ProjectConfig(dbt_project_path),
     profile_config=airflow_db,
@@ -44,15 +44,16 @@ simple_dag = DbtDag(
     start_date=datetime(2023, 1, 1),
     catchup=False,
     tags=["simple"],
-)
+) as simple_dag:  # Usando o contexto 'with' para garantir que a DAG seja criada corretamente
 
-# Definindo a tarefa para gerar a documentação DBT e copiar os arquivos para /opt/docs
-generate_dbt_docs = DbtDocsOperator(
-    task_id="generate_dbt_docs",
-    project_dir=dbt_project_path,
-    profile_config=airflow_db,
-    callback=lambda: copy_docs_to_local(dbt_project_path),
-)
+    # Definindo a tarefa para gerar a documentação DBT e copiar os arquivos para /opt/docs
+    generate_dbt_docs = DbtDocsOperator(
+        task_id="generate_dbt_docs",
+        project_dir=dbt_project_path,
+        profile_config=airflow_db,
+        callback=lambda: copy_docs_to_local(dbt_project_path),
+    )
 
-# Incluindo a tarefa na DAG
-simple_dag >> generate_dbt_docs
+    # Configurando dependências se necessário (se houver outras tarefas)
+    # Exemplo: se houver outras tarefas, você pode configurar dependências assim:
+    # other_task >> generate_dbt_docs
