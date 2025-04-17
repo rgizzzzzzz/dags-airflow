@@ -51,6 +51,5 @@ with DbtDag(
         task_id="generate_dbt_docs",
         project_dir=dbt_project_path,
         profile_config=airflow_db,
-        callback=lambda project_dir: copy_docs_to_local(project_dir),  # Ajustado para passar apenas o diretório
+        callback=lambda project_dir, **kwargs: copy_docs_to_local(project_dir, context=kwargs),  # Alterado para usar **kwargs
     )
-
