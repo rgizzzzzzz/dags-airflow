@@ -44,12 +44,4 @@ with DbtDag(
     start_date=datetime(2023, 1, 1),
     catchup=False,
     tags=["simple"],
-) as simple_dag:  # Usando o contexto 'with' para garantir que a DAG seja criada corretamente
-
-    # Definindo a tarefa para gerar a documentação DBT e copiar os arquivos para /opt/docs
-    generate_dbt_docs = DbtDocsOperator(
-        task_id="generate_dbt_docs",
-        project_dir=dbt_project_path,
-        profile_config=airflow_db,
-        callback=lambda project_dir, **kwargs: copy_docs_to_local(project_dir, context=kwargs),  # Alterado para usar **kwargs
-    )
+) as simple_dag:  
